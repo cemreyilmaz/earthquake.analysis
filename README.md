@@ -1,22 +1,12 @@
----
-output: 
-  html_document:
-    keep_md: true
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 
 
 # mycapstone
 
-<!-- badges: start -->
-[![Travis build status](https://travis-ci.com/cemreyilmaz/mycapstone.svg?branch=master)](https://travis-ci.com/cemreyilmaz/mycapstone)
-<!-- badges: end -->
-
 The goal of mycapstone is to analyze the earthquake data that were collected and 
 archived by NOAA and that can be found at 
-<https://www.ngdc.noaa.gov/hazard/strong.shtml>.
+<https://www.ngdc.noaa.gov/hazard/strong.shtml>. This project is a part of [Mastering Software Development in R](https://coursera.org/share/8d02d1925021b38e7cd136e1d23b0329)
 
 ## Installation
 
