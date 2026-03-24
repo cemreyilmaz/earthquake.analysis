@@ -1,75 +1,96 @@
 ---
 output: 
-  html_document:
-    keep_md: true
+  github_document:
+    html_preview: false
+---
+```{r, include = FALSE} 
+knitr::opts_chunk$set(
+  collapse = TRUE, 
+  comment = "#>", 
+  fig.path = "man/figures/README-", 
+  out.width = "100%", 
+  warning = FALSE, 
+  message = FALSE )
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+# earthquake.analysis 
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
+The **earthquake.analysis** package provides a robust suite of tools for processing, cleaning, and visualizing historical earthquake data from the **NOAA National Centers for Environmental Information (NCEI)**.
 
-# mycapstone
+This package is designed for researchers and data analysts to gain quick insights into global seismic activity through specialized `ggplot2` layers and interactive mapping.
 
-<!-- badges: start -->
-[![Travis build status](https://travis-ci.com/cemreyilmaz/mycapstone.svg?branch=master)](https://travis-ci.com/cemreyilmaz/mycapstone)
-<!-- badges: end -->
+## Key Features
 
-The goal of mycapstone is to analyze the earthquake data that were collected and 
-archived by NOAA and that can be found at 
-<https://www.ngdc.noaa.gov/hazard/strong.shtml>.
+-   **Data Pipeline:** Standardized cleaning for NOAA's raw TSV datasets.
+
+-   **Timeline Visualization:** Custom `geom_timeline` for comparing earthquake frequency and severity across countries.
+
+-   **Interactive Mapping:** Seamless `leaflet` integration with automated HTML popup generation.
+
+-   **Case Study:** Pre-loaded with historical global data for immediate analysis.
+
+------------------------------------------------------------------------
 
 ## Installation
 
-You can install the released version of mycapstone from [CRAN](https://CRAN.R-project.org) with:
+Since the package is in development, you can install the latest version directly from GitHub:
 
-``` r
-install.packages("mycapstone")
+``` R
+# install.packages("devtools")
+devtools::install_github("cemreyilmaz/earthquake-analysis")
 ```
 
-## Example_clean
+------------------------------------------------------------------------
 
-This is a basic example which shows you how to clean your data:
+## Getting Started
 
-```{r example_clean}
-library(mycapstone)
-## basic example code
-data <- utils::read.delim("earthquakes.tsv")
-data <- eq_clean_data(data)
-data <- eq_location_clean(data)
+### 1. Data Processing
+
+The package includes a built-in dataset `earthquakes`. Here is how to prepare it for analysis:
+
+``` R
+library(earthquake.analysis)
+library(dplyr)
+
+# Load and clean the built-in NOAA data
+data("earthquakes")
+clean_data <- earthquakes %>%
+  eq_clean_data() %>%
+  eq_location_clean()
+
+head(clean_data %>% select(Date, Country, Location.Name, Mag))
 ```
 
-## Example_visualize
+### 2. Visualizing Seismic Timelines
 
-This is a basic example which shows you how to visualize your data:
+Compare earthquake magnitudes and impacts over time using the specialized `geom_timeline_label`.
 
-```{r example_visual}
-library(mycapstone)
-## basic example code
-data <- utils::read.delim("earthquakes.tsv")
-data <- eq_clean_data(data)
-data <- eq_location_clean(data)
-data <- dplyr::filter(data, Country == "TURKEY")
-geom_timeline_label(data,7.5)
+``` R
+# Filter for significant events in Turkey after 2000
+viz_data <- clean_data %>%
+  filter(Country == "TURKEY" & Date > as.Date("2000-01-01"))
+
+# Visualize magnitude and fatalities with labels
+geom_timeline_label(viz_data, n_max = 7.0)
 ```
 
-## Example_map
+### 3. Interactive Spatial Mapping
 
-This is a basic example which shows you how to create an interactive map from your data:
+Generate interactive maps to explore epicenters and detailed event info.
 
-```{r example_map}
-library(mycapstone)
-## basic example code
-data <- utils::read.delim("earthquakes.tsv")
-data <- eq_clean_data(data)
-data <- eq_location_clean(data)
-data <- dplyr::filter(data, Country == "TURKEY")
-data <- dplyr::mutate(data, popup_text = eq_create_label(data))
-eq_map(data, "popup_text")
+``` R
+# Create custom HTML labels and map the data
+map_data <- clean_data %>%
+  filter(Country == "TURKEY" & Date > as.Date("2010-01-01")) %>%
+  mutate(popup_text = eq_create_label(.))
+
+eq_map(map_data, annot_col = "popup_text")
 ```
+
+------------------------------------------------------------------------
+
+## Technical Details
+
+The package follows the **S3 object system** for its custom geoms and is fully documented using `roxygen2`. It includes unit tests to ensure data integrity during cleaning and transformation.
+
+**Author:** [Cemre Yılmaz](https://github.com/cemreyilmaz)

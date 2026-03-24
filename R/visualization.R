@@ -1,12 +1,6 @@
-#' This is my capstone project during the course "Mastering Software Development
-#' in R Capstone" by Roger D. Peng and Brooke Anderson, Johns Hopkins University
-#' as a part of "Mastering Software Development in R Professional Certificate"
-#' program on Coursera.
 #' -----------------------------------------------------------------------------
-#' WEEK 2 - Visualize
+#' Visualization
 #' -----------------------------------------------------------------------------
-# data <- utils::read.delim("earthquakes.tsv")
-# data <- eq_location_clean(eq_clean_data(data[-1,]))
 # ---------------------------------------------------------------------------- #
 #' Earthquakes over Time
 #' This function draws a point for each earthquake from the min to max date in

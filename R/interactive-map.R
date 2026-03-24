@@ -1,14 +1,6 @@
-#' This is my capstone project during the course "Mastering Software Development
-#' in R Capstone" by Roger D. Peng and Brooke Anderson, Johns Hopkins University
-#' as a part of "Mastering Software Development in R Professional Certificate"
-#' program on Coursera.
 #' -----------------------------------------------------------------------------
-#' WEEK 3 - Interactive map
+#' Creating interactive map
 #' -----------------------------------------------------------------------------
-# data <- utils::read.delim("earthquakes.tsv")
-# data <- eq_location_clean(eq_clean_data(data[-1,]))
-# data <- dplyr::filter(data, Country == "TURKEY" &
-#                         lubridate::year(Date) >= 1999)
 # ---------------------------------------------------------------------------- #
 #' Interactive map with a pop-up date
 #' This function creates an interactive map to show the geographical locations

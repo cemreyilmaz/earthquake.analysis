@@ -1,12 +1,9 @@
-#' This is my capstone project during the course "Mastering Software Development
-#' in R Capstone" by Roger D. Peng and Brooke Anderson, Johns Hopkins University
-#' as a part of "Mastering Software Development in R Professional Certificate"
-#' program on Coursera.
 #' -----------------------------------------------------------------------------
-#' WEEK 1 - Clean
+#' Data cleaning
 #' -----------------------------------------------------------------------------
 # for Windows, if you get an error about Java
 # Sys.setenv(JAVA_HOME="C:/Program Files/Common Files/Datawatch/Drivers/7.1.5/jre/bin")
+#
 # read data: Earthquake Database by National Centers for Environmental
 # Information, NOAA, USA (1995 - 2000)
 # <https://www.ngdc.noaa.gov/hazel/view/hazards/earthquake/search>

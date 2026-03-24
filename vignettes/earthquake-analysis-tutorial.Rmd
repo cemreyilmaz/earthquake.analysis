@@ -1,0 +1,88 @@
+---
+title: "Visualizing Global Seismic Activity"
+author: "Cemre Yilmaz"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualizing Global Seismic Activity}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## Introduction
+
+The earthquake.analysis package provides a suite of tools for processing
+and visualizing historical earthquake data from the NOAA National
+Geophysical Data Center. This vignette demonstrates a typical data
+analysis workflow: cleaning raw data, visualizing timelines, and
+creating interactive maps.
+
+``` r
+library(earthquake.analysis) 
+library(dplyr) 
+library(ggplot2) 
+library(leaflet) 
+```
+
+## Data Preprocessing
+
+The package includes functions to transform raw NOAA data into a tidy
+format. We handle date conversions and clean location strings to
+separate country names from specific regions.
+
+``` r
+# Load the raw dataset 
+library(earthquake.analysis) 
+data(earthquakes)
+
+# Apply the cleaning pipeline
+cleaned_data <- earthquakes %>% 
+  eq_clean_data()%>% 
+  eq_location_clean()
+head(cleaned_data %>% 
+       select(Date, Country, Location.Name, Mag)) 
+```
+
+## Visualizing Earthquake
+
+Timelines To understand the frequency and severity of earthquakes over
+time, we use geom_timeline. This tool allows us to compare multiple
+countries and visualize the magnitude (point size) and impact (color) of
+each event.
+
+Code snippet
+
+``` r
+# Filtering for specific Mediterranean countries 
+viz_data <- cleaned_data %>% 
+  filter(Country %in% c("TURKEY", "GREECE", "ITALY") & Date > as.Date("2000-01-01"))
+
+# Generating the timeline
+geom_timeline_label(viz_data, n_max = 7.0) 
+```
+
+## Interactive Spatial Mapping
+
+For a more granular view, the package leverages leaflet to create
+interactive maps. We can generate custom HTML labels to display key
+metrics (Magnitude, Deaths, Location) upon clicking an epicenter.
+
+``` r
+# Prepare labels and filter for high-magnitude events 
+map_data <- cleaned_data %>% 
+  filter(Country == "TURKEY" & Date > as.Date("1990-01-01")) %>% 
+  mutate(popup_text = eq_create_label(.))
+
+# Generate interactive map
+eq_map(map_data, annot_col = "popup_text") 
+```
+
+## Conclusion
+
+The earthquake.analysis package streamlines the path from raw seismic
+records to publication-quality visualizations and interactive tools. By
+combining statistical rigor with spatial context, it provides deep
+insights into historical earthquake patterns.
