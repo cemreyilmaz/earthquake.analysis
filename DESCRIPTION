@@ -1,12 +1,12 @@
-Package: mycapstone
+Package: earthquake-analysis
 Type: Package
-Title: Analysis of earthquake data
+Title: Seismic Data Analysis and Visualization Tools
 Version: 0.1.0
 Author: Cemre Yilmaz <cemre.yilmaz@uni-graz.at>
 Maintainer: Cemre Yilmaz <cemre.yilmaz@uni-graz.at>
-Description: This is my capstone project in the specialization program of
-    "Mastering Software Development in R Professional Certificate" by
-    Roger D. Peng and Brooke Anderson on Coursera.
+Description: A specialized toolset for cleaning, processing, 
+    and visualizing historical earthquake data from NOAA. 
+    Includes custom geoms for timelines and interactive Leaflet mapping.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -22,5 +22,5 @@ Suggests:
     xlsx,
     testthat
 VignetteBuilder: knitr
-URL: https://github.com/cemreyilmaz/mycapstone
-BugReports: https://github.com/cemreyilmaz/mycapstone/issues
+URL: https://github.com/cemreyilmaz/earthquake-analysis
+BugReports: https://github.com/cemreyilmaz/earthquake-analysis/issues
