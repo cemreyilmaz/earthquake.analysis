@@ -1,68 +1,92 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# earthquake.analysis
 
+The **earthquake.analysis** package provides a robust suite of tools for
+processing, cleaning, and visualizing historical earthquake data from
+the **NOAA National Centers for Environmental Information (NCEI)**.
 
-# mycapstone
+This package is designed for researchers and data analysts to gain quick
+insights into global seismic activity through specialized `ggplot2`
+layers and interactive mapping.
 
-The goal of mycapstone is to analyze the earthquake data that were collected and 
-archived by NOAA and that can be found at 
-<https://www.ngdc.noaa.gov/hazard/strong.shtml>. This project is a part of [Mastering Software Development in R](https://coursera.org/share/8d02d1925021b38e7cd136e1d23b0329)
+## Key Features
+
+- **Data Pipeline:** Standardized cleaning for NOAA’s raw TSV datasets.
+
+- **Timeline Visualization:** Custom `geom_timeline` for comparing
+  earthquake frequency and severity across countries.
+
+- **Interactive Mapping:** Seamless `leaflet` integration with automated
+  HTML popup generation.
+
+- **Case Study:** Pre-loaded with historical global data for immediate
+  analysis.
+
+------------------------------------------------------------------------
 
 ## Installation
 
-You can install the released version of mycapstone from [CRAN](https://CRAN.R-project.org) with:
+Since the package is in development, you can install the latest version
+directly from GitHub:
+
+\`\`\` R \# install.packages(“devtools”)
+devtools::install_github(“cemreyilmaz/earthquake-analysis”)
+
+------------------------------------------------------------------------
+
+## Getting Started
+
+### 1. Data Processing
+
+The package includes a built-in dataset `earthquakes`. Here is how to
+prepare it for analysis:
 
 ``` r
-install.packages("mycapstone")
+library(earthquake.analysis)
+library(dplyr)
+
+# Load and clean the built-in NOAA data
+data("earthquakes")
+clean_data <- earthquakes %>%
+  eq_clean_data() %>%
+  eq_location_clean()
+
+head(clean_data %>% select(Date, Country, Location.Name, Mag))
 ```
 
-## Example_clean
+### 2. Visualizing Seismic Timelines
 
-This is a basic example which shows you how to clean your data:
+Compare earthquake magnitudes and impacts over time using the
+specialized `geom_timeline_label`.
 
+``` r
+# Filter for significant events in Turkey after 2000
+viz_data <- clean_data %>%
+  filter(Country == "TURKEY" & Date > as.Date("2000-01-01"))
 
-```r
-library(mycapstone)
-## basic example code
-data <- utils::read.delim("earthquakes.tsv")
-data <- eq_clean_data(data)
-data <- eq_location_clean(data)
+# Visualize magnitude and fatalities with labels
+geom_timeline_label(viz_data, n_max = 7.0)
 ```
 
-## Example_visualize
+### 3. Interactive Spatial Mapping
 
-This is a basic example which shows you how to visualize your data:
+Generate interactive maps to explore epicenters and detailed event info.
 
+``` r
+# Create custom HTML labels and map the data
+map_data <- clean_data %>%
+  filter(Country == "TURKEY" & Date > as.Date("2010-01-01")) %>%
+  mutate(popup_text = eq_create_label(.))
 
-```r
-library(mycapstone)
-## basic example code
-data <- utils::read.delim("earthquakes.tsv")
-data <- eq_clean_data(data)
-data <- eq_location_clean(data)
-data <- dplyr::filter(data, Country == "TURKEY")
-geom_timeline_label(data,7.5)
+eq_map(map_data, annot_col = "popup_text")
 ```
 
-<img src="man/figures/README-example_visual-1.png" width="100%" />
+------------------------------------------------------------------------
 
-## Example_map
+## Technical Details
 
-This is a basic example which shows you how to create an interactive map from your data:
+The package follows the **S3 object system** for its custom geoms and is
+fully documented using `roxygen2`. It includes unit tests to ensure data
+integrity during cleaning and transformation.
 
-
-```r
-library(mycapstone)
-## basic example code
-data <- utils::read.delim("earthquakes.tsv")
-data <- eq_clean_data(data)
-data <- eq_location_clean(data)
-data <- dplyr::filter(data, Country == "TURKEY")
-data <- dplyr::mutate(data, popup_text = eq_create_label(data))
-eq_map(data, "popup_text")
-```
-
-```{=html}
-<div id="htmlwidget-f2675173f30bcf7ea75c" style="width:100%;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f2675173f30bcf7ea75c">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircleMarkers","args":[[38.063,36.878,40.76,40.711,40.709,40.744,40.758,40.358,38.164,40.693,38.457],[30.134,35.307,29.97,29.949,30.045,30.266,31.161,42.346,38.777,32.992,31.351],[6.4,6.3,7.6,5.2,5.8,5.7,7.2,5.7,4.1,6,6],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},null,null,["<b>Location: <\/b>  Dinar, Evciler<br/><b>Magnitude: <\/b>6.4<br/><b>Total deaths: <\/b>95","<b>Location: <\/b> Adana, Ceyhan<br/><b>Magnitude: <\/b>6.3<br/><b>Total deaths: <\/b>145","<b>Location: <\/b> Istanbul, Kocaeli, Sakarya<br/><b>Magnitude: <\/b>7.6<br/><b>Total deaths: <\/b>17118","<b>Location: <\/b> Izmit<br/><b>Magnitude: <\/b>5.2<br/><b>Total deaths: <\/b>1","<b>Location: <\/b> Adapazari-Goluck-Kocaeli<br/><b>Magnitude: <\/b>5.8<br/><b>Total deaths: <\/b>7","<b>Location: <\/b> Adapazari, Koceali, Golcuk<br/><b>Magnitude: <\/b>5.7<br/><b>Total deaths: <\/b>2","<b>Location: <\/b> Bolu-Duzce-Kaynasli, Adapazari, Zonguldak<br/><b>Magnitude: <\/b>7.2<br/><b>Total deaths: <\/b>894","<b>Location: <\/b> Goresken, Erzurum Province<br/><b>Magnitude: <\/b>5.7<br/><b>Total deaths: <\/b>1","<b>Location: <\/b> Doganyol, Puturge<br/><b>Magnitude: <\/b>4.1<br/><b>Total deaths: <\/b>NA","<b>Location: <\/b> Cerkes, Cubuk, Orta<br/><b>Magnitude: <\/b>6<br/><b>Total deaths: <\/b>2","<b>Location: <\/b> Afyon-Bolvadin<br/><b>Magnitude: <\/b>6<br/><b>Total deaths: <\/b>6"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[36.878,40.76],"lng":[29.949,42.346]}},"evals":[],"jsHooks":[]}</script>
-```
+**Author:** [Cemre Yılmaz](https://github.com/cemreyilmaz)

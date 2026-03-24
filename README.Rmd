@@ -3,7 +3,8 @@ output:
   github_document:
     html_preview: false
 ---
-```{r, include = FALSE} 
+
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE, 
   comment = "#>", 
@@ -11,9 +12,9 @@ knitr::opts_chunk$set(
   out.width = "100%", 
   warning = FALSE, 
   message = FALSE )
----
+```
 
-# earthquake.analysis 
+# earthquake.analysis
 
 The **earthquake.analysis** package provides a robust suite of tools for processing, cleaning, and visualizing historical earthquake data from the **NOAA National Centers for Environmental Information (NCEI)**.
 
@@ -35,10 +36,7 @@ This package is designed for researchers and data analysts to gain quick insight
 
 Since the package is in development, you can install the latest version directly from GitHub:
 
-``` R
-# install.packages("devtools")
-devtools::install_github("cemreyilmaz/earthquake-analysis")
-```
+\`\`\` R \# install.packages("devtools") devtools::install_github("cemreyilmaz/earthquake-analysis")
 
 ------------------------------------------------------------------------
 
@@ -48,7 +46,7 @@ devtools::install_github("cemreyilmaz/earthquake-analysis")
 
 The package includes a built-in dataset `earthquakes`. Here is how to prepare it for analysis:
 
-``` R
+``` r
 library(earthquake.analysis)
 library(dplyr)
 
@@ -65,7 +63,7 @@ head(clean_data %>% select(Date, Country, Location.Name, Mag))
 
 Compare earthquake magnitudes and impacts over time using the specialized `geom_timeline_label`.
 
-``` R
+``` r
 # Filter for significant events in Turkey after 2000
 viz_data <- clean_data %>%
   filter(Country == "TURKEY" & Date > as.Date("2000-01-01"))
@@ -78,7 +76,7 @@ geom_timeline_label(viz_data, n_max = 7.0)
 
 Generate interactive maps to explore epicenters and detailed event info.
 
-``` R
+``` r
 # Create custom HTML labels and map the data
 map_data <- clean_data %>%
   filter(Country == "TURKEY" & Date > as.Date("2010-01-01")) %>%
